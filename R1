@@ -1,0 +1,78 @@
+!R1
+!
+ena
+conf t
+ipv unicast
+hostname R1
+username R5 password solemne2
+
+int lo0
+	ip add 1.0.0.1 255.0.0.0
+	no sh
+exit
+
+int se0/0/0
+	no sh
+	!description ipv4 -> r5
+	ip add 192.168.15.1 255.255.255.0
+	encapsulation ppp
+	ppp authentication chap
+exit
+
+int se0/0/1
+	encapsulation frame-relay ietf
+	frame-relay lmi-type q933a
+	no sh
+exit
+
+int se0/0/1.200 point-to-point
+	no sh
+	!description ipv6 -> r5
+	ipv ena
+	ipv add 2015:15::1/64
+	frame-relay interface-dlci 200
+exit
+
+
+int se0/1/0
+	no sh
+	encapsulation frame-relay ietf
+	frame-relay lmi-type ansi
+exit
+
+int se0/1/0.112 point-to-point
+	!description r1 -> r2
+	ip add 192.168.12.1 255.255.255.0
+	ipv ena
+	ipv add 2015:12::1/64
+	frame-relay interface-dlci 112
+	ipv eigrp 600
+exit
+
+
+int se0/1/0.113 point-to-point
+	!description r1 -> r2
+	ip add 192.168.13.1 255.255.255.0 
+	ipv ena
+	ipv add 2015:13::1/64
+	frame-relay interface-dlci 113
+	ipv eigrp 600
+exit
+
+router eigrp 500
+	no auto-summary
+	network 192.168.12.0
+	network 192.168.13.0
+	passive-interface lo0
+	redistribute static
+exit
+
+ipv router eigrp 600
+	eigrp router-id 1.1.1.1
+	redistribute static
+	no sh
+exit
+
+ip route 0.0.0.0 0.0.0.0 192.168.15.5
+ipv route ::/0 2015:15::5
+ 

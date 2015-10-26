@@ -1,0 +1,59 @@
+!R2
+ena 
+conf t
+ipv unicast
+host R2
+
+int lo0
+	ip add 2.0.0.1 255.0.0.0
+	no sh
+exit
+
+int se0/0/0
+	encapsulation frame-relay ietf
+	frame-relay lmi-type ansi
+	no sh
+exit
+
+interface se0/0/0.21 point-to-point
+	ip address 192.168.12.2 255.255.255.0 
+	ipv ena
+	ipv add 2015:12::2/64
+	frame-relay interface-dlci 21
+	ipv eigrp 600
+exit
+
+int g0/0
+	no sh
+exit
+
+int g0/0.20
+	encapsulation dot1Q 20
+	ipv add 172.16.20.2 255.255.255.0
+exit
+
+int g0/0.21
+	encapsulation dot1Q 21
+	ipv ena
+	ip add 2011:21::2/64
+exit
+
+ip dhcp excluded-address 172.16.20.1 172.16.20.10
+ip dhcp pool VLAN20
+	network 172.16.20.0 255.255.255.0
+	default-router 172.16.20.2
+exit
+
+router eigrp 500
+	no auto-summary
+	network 192.168.12.0
+	passive-interface g0/0
+	passive-interface lo0
+exit
+ 
+ipv router eigrp 600
+	eigrp router-id 2.2.2.2
+	no sh
+exit
+ 
+

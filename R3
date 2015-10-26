@@ -1,0 +1,47 @@
+!R3
+ena 
+conf t
+ipv unicast
+host R3
+
+int lo0
+	ip add 3.0.0.1 255.0.0.0
+	no sh
+exit
+
+int se0/0/0
+	encapsulation frame-relay ietf
+	frame-relay lmi-type ansi
+	no sh
+exit
+
+int se0/0/0.31 point-to-point
+	ip add 192.168.13.3 255.255.255.0 
+	ipv ena
+	ipv add 2015:13::3/64
+	frame-relay interface-dlci 31
+	ipv eigrp 600
+exit
+
+int tun0
+	ip add 192.168.37.1 255.255.255.252
+	tun source se0/0/0.31
+	tun dest 192.168.57.7
+exit
+
+
+int g0/0
+	ip add 172.16.103.3 255.255.255.0
+no sh
+
+router eigrp 500
+	no auto-summary
+	network 192.168.13.0
+	passive-interface g0/0
+	passive-interface lo0
+exit
+ 
+ipv router eigrp 600
+	eigrp router-id 3.3.3.3
+	no sh
+exit

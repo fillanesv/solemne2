@@ -1,0 +1,46 @@
+!R7
+ena 
+conf t
+ipv unicast
+host R7
+
+int lo0
+	ip add 7.0.0.1 255.0.0.0
+	no sh
+exit
+
+int se0/0/0
+	encapsulation frame-relay ietf
+	frame-relay lmi-type ansi
+	no sh
+exit
+
+int se0/0/0.75 point-to-point
+	ip add 192.168.57.7 255.255.255.0 
+	ipv add 2015:57::7/64
+	frame-relay interface-dlci 75
+	ipv ospf 200 area 0
+exit
+
+int tun0
+	ip add 192.168.37.2 255.255.255.252
+	tun source se0/0/0.75
+	tun dest 192.168.13.3
+exit
+
+
+int g0/0
+	ip add 172.16.107.7 255.255.255.0
+no sh
+
+router ospf 100
+	router-id 7.7.7.7
+	network 7.0.0.0 0.255.255.255 area 0
+	network 192.168.57.0 0.0.0.255 area 0
+	network 172.16.107.0 0.0.0.255 area 0
+	passi g0/0
+	passi lo0
+
+exit
+
+
