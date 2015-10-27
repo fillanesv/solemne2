@@ -20,6 +20,7 @@ int se0/0/0.65 point-to-point
 	ipv add 2015:56::6/64
 	frame-relay interface-dlci 65
 	ipv ospf 200 area 0
+	ip nat outside
 exit
 
 int g0/0
@@ -29,6 +30,7 @@ exit
 int g0/0.60
 	encapsulation dot1Q 60
 	ip add 172.16.60.5 255.255.255.0
+	ip nat inside
 exit
 
 int g0/0.61
@@ -51,4 +53,9 @@ router ospf 100
 	passi g0/0
 	passi lo0
 exit
+
+access-list 10 permit 172.16.60.0 0.0.0.255
+ip nat pool PAT 192.168.56.6 192.168.56.6 netmask 255.255.255.0
+ip nat inside source list 10 pool PAT overload
+ 
 

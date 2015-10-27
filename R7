@@ -42,5 +42,6 @@ router ospf 100
 	passi lo0
 
 exit
+ip route 172.16.103.0 255.255.255.0 192.168.37.1
 
 

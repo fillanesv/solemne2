@@ -21,6 +21,7 @@ interface se0/0/0.21 point-to-point
 	ipv add 2015:12::2/64
 	frame-relay interface-dlci 21
 	ipv eigrp 600
+	ip nat outside
 exit
 
 int g0/0
@@ -29,13 +30,14 @@ exit
 
 int g0/0.20
 	encapsulation dot1Q 20
-	ipv add 172.16.20.2 255.255.255.0
+	ip add 172.16.20.2 255.255.255.0
+	ip nat inside
 exit
 
 int g0/0.21
 	encapsulation dot1Q 21
 	ipv ena
-	ip add 2011:21::2/64
+	ipv add 2011:21::2/64
 exit
 
 ip dhcp excluded-address 172.16.20.1 172.16.20.10
@@ -55,5 +57,9 @@ ipv router eigrp 600
 	eigrp router-id 2.2.2.2
 	no sh
 exit
+
+access-list 10 permit 172.16.20.0 0.0.0.255
+ip nat pool PAT 192.168.12.2 192.168.12.2 netmask 255.255.255.0
+ip nat inside source list 10 pool PAT overload
  
 

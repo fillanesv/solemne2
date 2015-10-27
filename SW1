@@ -6,20 +6,25 @@ vlan 20
 name IPV4
 vlan 21 
 name IPV6
+
 int range fa0/1-24
-switchport port-security mac-address sticky
-switchport port-security max 2
-switchport port-security violation shutdown 
+	switchport port-security mac-address sticky
+	switchport port-security max 2
+	switchport port-security violation shutdown 
+exit
+
 int fa0/1
-switchport mode trunk
+	switchport mode trunk
 exit
+
 int fa0/22
-switchport mode access
-switchport access vlan 20
-spanning-tree bpduguard enable
+	switchport mode access
+	switchport access vlan 20
+	spanning-tree bpduguard enable
 exit
+
 int fa0/23
-switchport mode access
-switchport access vlan 21
-spanning-tree bpduguard enable
+	switchport mode access
+	switchport access vlan 21
+	spanning-tree bpduguard enable
 exit
