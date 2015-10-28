@@ -36,7 +36,8 @@ exit
 int g0/0.61
 	encapsulation dot1Q 61
 	ipv ena
-	ipv add 2011:61::5/64
+	ipv add 2011:61::6/64
+	ipv ospf 200 area 0
 exit
 
 
@@ -48,10 +49,15 @@ exit
 
 router ospf 100
 	router-id 6.6.6.6
+	network 172.16.60.0 0.0.0.255 area 0
 	network 192.168.56.0 0.0.0.255 area 0
-	network 6.0.0.0 0.255.255.255
+	network 6.0.0.0 0.255.255.255 area 0
 	passi g0/0
 	passi lo0
+exit
+
+ipv router ospf 200
+	router-id 6.6.6.6
 exit
 
 access-list 10 permit 172.16.60.0 0.0.0.255

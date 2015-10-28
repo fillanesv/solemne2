@@ -17,6 +17,7 @@ exit
 
 int se0/0/0.75 point-to-point
 	ip add 192.168.57.7 255.255.255.0 
+	ipv ena
 	ipv add 2015:57::7/64
 	frame-relay interface-dlci 75
 	ipv ospf 200 area 0
@@ -24,8 +25,10 @@ exit
 
 int tun0
 	ip add 192.168.37.2 255.255.255.252
-	tun source se0/0/0.75
-	tun dest 192.168.13.3
+	!tun source se0/0/0.75
+	tun source lo0
+	!tun dest 192.168.13.3
+	tun dest 3.0.0.1
 exit
 
 
@@ -40,8 +43,8 @@ router ospf 100
 	network 172.16.107.0 0.0.0.255 area 0
 	passi g0/0
 	passi lo0
-
 exit
+
 ip route 172.16.103.0 255.255.255.0 192.168.37.1
 
 
