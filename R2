@@ -61,8 +61,12 @@ ipv router eigrp 600
 	no sh
 exit
 
-access-list 10 permit 172.16.20.0 0.0.0.255
-ip nat pool PAT 192.168.12.2 192.168.12.2 netmask 255.255.255.0
-ip nat inside source list 10 pool PAT overload
- 
+!access-list 10 permit 172.16.20.0 0.0.0.255
+!ip nat pool PAT 192.168.12.2 192.168.12.2 netmask 255.255.255.0
+!ip nat inside source list 10 pool PAT overload
+
+ip nat inside source list PAT interface Serial0/0/0.211 overload
+ip access-list standard PAT
+permit 172.16.20.0 0.0.0.255
+
 

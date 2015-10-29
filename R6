@@ -60,8 +60,12 @@ ipv router ospf 200
 	router-id 6.6.6.6
 exit
 
-access-list 10 permit 172.16.60.0 0.0.0.255
-ip nat pool PAT 192.168.56.6 192.168.56.6 netmask 255.255.255.0
-ip nat inside source list 10 pool PAT overload
+!access-list 10 permit 172.16.60.0 0.0.0.255
+!ip nat pool PAT 192.168.56.6 192.168.56.6 netmask 255.255.255.0
+!ip nat inside source list 10 pool PAT overload
+
+ip nat inside source list PAT interface Serial0/0/0.65 overload
+ip access-list standard PAT
+permit 172.16.60.0 0.0.0.255
  
 
