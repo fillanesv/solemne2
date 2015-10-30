@@ -7,7 +7,7 @@ hostname R1
 username R5 password solemne2
 
 int lo0
-	ip add 1.0.0.1 255.0.0.0
+	ip add 1.1.1.1 255.255.255.255
 	no sh
 exit
 
@@ -25,12 +25,12 @@ int se0/0/1
 	no sh
 exit
 
-int se0/0/1.200 point-to-point
+int se0/0/1.115 point-to-point
 	no sh
 	!description ipv6 -> r5
 	ipv ena
 	ipv add 2015:15::1/64
-	frame-relay interface-dlci 200
+	frame-relay interface-dlci 115
 exit
 
 
@@ -63,10 +63,12 @@ exit
 router eigrp 500
 	redistribute static
 	no auto-summary
-	network 1.0.0.0 
-	network 192.168.12.0
-	network 192.168.13.0
+	!ip de la interfaz
+	network 1.1.1.1 0.0.0.0 
+	network 192.168.12.1 0.0.0.0
+	network 192.168.13.1 0.0.0.0
 	passive-interface lo0
+	passive-interface se0/0/0
 	redistribute static
 exit
 

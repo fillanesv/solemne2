@@ -6,7 +6,7 @@ username R1 password solemne2
 ipv unicast
 
 int lo0
-	ip add 5.0.0.1 255.0.0.0
+	ip add 5.5.5.5 255.255.255.255
 	no sh
 exit
 
@@ -23,10 +23,10 @@ int se0/0/1
 	no sh
 exit
 
-int se0/0/1.201 point-to-point
+int se0/0/1.551 point-to-point
 	ipv ena
 	ipv add 2015:15::5/64
-	frame-relay interface-dlci 201
+	frame-relay interface-dlci 551
 	!ipv ospf 200 area 0
 exit
 
@@ -49,17 +49,18 @@ int se0/1/0.57 point-to-point
 	!description r5-r7
 	ip add 192.168.57.5 255.255.255.0 
 	ipv ena
-	ipv 2015:57::5/64
+	ipv add 2015:57::5/64
 	frame-relay interface-dlci 57
 	ipv6 ospf 200 area 0
 exit
 
 router ospf 100
 	router-id 5.5.5.5
-	network 5.0.0.0 0.255.255.255 area 0
+	network 5.5.5.5 255.255.255.255 area 0
 	network 192.168.56.0 0.255.255.255 area 0 
 	network 192.168.57.0 0.255.255.255 area 0
 	passi lo0
+	passi se0/0/0
 	default-information originate
 exit
 
